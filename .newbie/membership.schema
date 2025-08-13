@@ -1,0 +1,79 @@
+// ! ------------------------------------------------------------ //
+// !          [Microservice] Account membership models            //
+// ! ------------------------------------------------------------ //
+// * Membership                                                   //
+// * MembershipLevel                                              //
+// * Subscription                                                 //
+// * SubscriptionPlan                                             //
+// * ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄  //
+
+model Membership {
+  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cardNumber String?         @unique
+  points     Int             @default(0)
+  userId     String          @db.Uuid
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  level      MembershipLevel @relation(fields: [levelId], references: [id])
+  levelId    Int
+
+  @@schema("microservice/membership")
+}
+
+model MembershipLevel {
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  requiredPoints Int          @default(0)
+  discountRate   Float        @default(0.0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  memberships    Membership[]
+
+  @@schema("microservice/membership")
+}
+
+model Subscription {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status      SubscriptionStatus @default(ACTIVE)
+  dateOfStart DateTime
+  dateOfEnd   DateTime
+  autoRenew   Boolean            @default(false)
+  userId      String             @db.Uuid
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  plan        SubscriptionPlan   @relation(fields: [planId], references: [id])
+  planId      Int
+
+  @@schema("microservice/membership")
+}
+
+model SubscriptionPlan {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  price         Float
+  billingCycle  BillingCycle
+  features      Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+
+  @@schema("microservice/membership")
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUALLY
+  ANNUALLY
+
+  @@schema("microservice/membership")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELED
+  PENDING_PAYMENT
+
+  @@schema("microservice/membership")
+}
