@@ -40,7 +40,6 @@ model Subscription {
   dateOfEnd   DateTime
   amountPaid  Float
   autoRenew   Boolean            @default(false)
-  userId      String             @db.Uuid
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   member      Membership         @relation(fields: [memberId], references: [id])
