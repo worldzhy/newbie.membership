@@ -1,5 +1,5 @@
 // ! ------------------------------------------------------------ //
-// !          [Microservice] Account membership models            //
+// !             [Microservice] Membership models                 //
 // ! ------------------------------------------------------------ //
 // * Membership                                                   //
 // * MembershipLevel                                              //
@@ -8,14 +8,15 @@
 // * ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄  //
 
 model Membership {
-  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  cardNumber String?         @unique
-  points     Int             @default(0)
-  userId     String          @db.Uuid
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  level      MembershipLevel @relation(fields: [levelId], references: [id])
-  levelId    Int
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cardNumber    String?          @unique
+  points        Int              @default(0)
+  userId        String           @unique @db.Uuid
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  level         MembershipLevel? @relation(fields: [levelId], references: [id])
+  levelId       Int?
+  subscriptions Subscription[]
 
   @@schema("microservice/membership")
 }
@@ -34,13 +35,16 @@ model MembershipLevel {
 
 model Subscription {
   id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  status      SubscriptionStatus @default(ACTIVE)
+  status      SubscriptionStatus @default(PENDING_PAYMENT)
   dateOfStart DateTime
   dateOfEnd   DateTime
+  amountPaid  Float
   autoRenew   Boolean            @default(false)
   userId      String             @db.Uuid
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
+  member      Membership         @relation(fields: [memberId], references: [id])
+  memberId    String             @db.Uuid
   plan        SubscriptionPlan   @relation(fields: [planId], references: [id])
   planId      Int
 
