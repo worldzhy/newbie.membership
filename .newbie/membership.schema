@@ -34,18 +34,18 @@ model MembershipLevel {
 }
 
 model Subscription {
-  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  status       SubscriptionStatus @default(ACTIVE)
-  dateOfStart  DateTime
-  dateOfEnd    DateTime
-  amountPaid   Float
-  autoRenew    Boolean            @default(false)
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-  membership   Membership         @relation(fields: [membershipId], references: [id])
-  membershipId String             @db.Uuid
-  plan         SubscriptionPlan   @relation(fields: [planId], references: [id])
-  planId       Int
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status               SubscriptionStatus @default(ACTIVE)
+  dateOfStart          DateTime
+  dateOfEnd            DateTime
+  paymentAmountInCents Int
+  autoRenew            Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  membership           Membership         @relation(fields: [membershipId], references: [id])
+  membershipId         String             @db.Uuid
+  plan                 SubscriptionPlan   @relation(fields: [planId], references: [id])
+  planId               Int
 
   @@schema("microservice/membership")
 }
@@ -53,7 +53,7 @@ model Subscription {
 model SubscriptionPlan {
   id            Int            @id @default(autoincrement())
   name          String         @unique
-  price         Float
+  priceInCents  Int
   billingCycle  BillingCycle
   features      Json?
   createdAt     DateTime       @default(now())

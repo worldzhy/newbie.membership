@@ -25,7 +25,7 @@ export class CreateSubscriptionPlanRequestDto {
 
   @ApiProperty({type: Number, required: true})
   @IsNumber()
-  price: number;
+  priceInCents: number;
 }
 
 export class UpdateSubscriptionPlanRequestDto {

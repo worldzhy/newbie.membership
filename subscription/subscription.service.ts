@@ -32,7 +32,7 @@ export class SubscriptionService {
       data: {
         dateOfStart,
         dateOfEnd,
-        amountPaid: plan.price,
+        paymentAmountInCents: plan.priceInCents,
         membershipId: params.membershipId,
         planId: plan.id,
       },
