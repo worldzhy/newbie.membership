@@ -50,14 +50,8 @@ export class GetSubscriptionPlanRequestDto {
 export class ListSubscriptionsRequestDto extends CommonListRequestDto {}
 
 export class CreateSubscriptionRequestDto {
-  @ApiProperty({type: String, required: true})
-  @IsUUID()
-  @IsNotEmpty()
-  userId: string;
-
   @ApiProperty({type: Number, required: true})
   @IsNumber()
-  @IsNotEmpty()
   planId: number;
 }
 

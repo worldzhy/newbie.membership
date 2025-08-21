@@ -25,8 +25,8 @@ export class SubscriptionPlanController {
 
   @Get()
   @ApiOperation({summary: 'List all subscription plans'})
-  listSubscriptionPlans(@Body() body: ListSubscriptionPlansRequestDto) {
-    return this.prisma.findManyInManyPages({
+  async listSubscriptionPlans(@Body() body: ListSubscriptionPlansRequestDto) {
+    return await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.SubscriptionPlan,
       pagination: {page: body.page, pageSize: body.pageSize},
     });
@@ -34,17 +34,17 @@ export class SubscriptionPlanController {
 
   @Post()
   @ApiOperation({summary: 'Create a new subscription plan'})
-  createSubscriptionPlan(@Body() body: CreateSubscriptionPlanRequestDto) {
-    return this.prisma.subscriptionPlan.create({data: body});
+  async createSubscriptionPlan(@Body() body: CreateSubscriptionPlanRequestDto) {
+    return await this.prisma.subscriptionPlan.create({data: body});
   }
 
   @Patch(':id')
   @ApiOperation({summary: 'Update an existing subscription plan'})
-  updateSubscriptionPlan(
+  async updateSubscriptionPlan(
     @Param() params: GetSubscriptionPlanRequestDto,
     @Body() body: UpdateSubscriptionPlanRequestDto
   ) {
-    return this.prisma.subscriptionPlan.update({
+    return await this.prisma.subscriptionPlan.update({
       where: {id: params.id},
       data: body,
     });
@@ -52,7 +52,7 @@ export class SubscriptionPlanController {
 
   @Delete(':id')
   @ApiOperation({summary: 'Delete a subscription plan'})
-  deleteSubscriptionPlan(@Param() params: GetSubscriptionPlanRequestDto) {
-    return this.prisma.subscriptionPlan.delete({where: {id: params.id}});
+  async deleteSubscriptionPlan(@Param() params: GetSubscriptionPlanRequestDto) {
+    return await this.prisma.subscriptionPlan.delete({where: {id: params.id}});
   }
 }
