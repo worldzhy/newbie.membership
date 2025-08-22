@@ -13,7 +13,6 @@ import {PrismaService} from '@framework/prisma/prisma.service';
 import {
   CreateSubscriptionPlanRequestDto,
   GetSubscriptionPlanRequestDto,
-  ListSubscriptionPlansRequestDto,
   UpdateSubscriptionPlanRequestDto,
 } from './subscription.dto';
 
@@ -25,10 +24,10 @@ export class SubscriptionPlanController {
 
   @Get()
   @ApiOperation({summary: 'List all subscription plans'})
-  async listSubscriptionPlans(@Body() body: ListSubscriptionPlansRequestDto) {
+  async listSubscriptionPlans() {
     return await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.SubscriptionPlan,
-      pagination: {page: body.page, pageSize: body.pageSize},
+      pagination: {page: 0, pageSize: 1000},
     });
   }
 

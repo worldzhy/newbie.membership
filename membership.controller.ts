@@ -1,4 +1,13 @@
-import {Body, Controller, Delete, Get, Param, Patch, Req} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Query,
+  Req,
+} from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {PrismaService} from '@framework/prisma/prisma.service';
 import {Prisma} from '@prisma/client';
@@ -31,10 +40,10 @@ export class MembershipController {
 
   @Get()
   @ApiOperation({summary: 'List all memberships'})
-  async listMemberships(@Body() body: ListMembershipLevelsRequestDto) {
+  async listMemberships(@Query() query: ListMembershipLevelsRequestDto) {
     return await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.Membership,
-      pagination: {page: body.page, pageSize: body.pageSize},
+      pagination: {page: query.page, pageSize: query.pageSize},
     });
   }
 

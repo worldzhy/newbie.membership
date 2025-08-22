@@ -27,7 +27,7 @@ export class MembershipLevelController {
   async listMembershipLevels() {
     return await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.MembershipLevel,
-      pagination: {page: 0, pageSize: 100},
+      pagination: {page: 0, pageSize: 1000},
     });
   }
 

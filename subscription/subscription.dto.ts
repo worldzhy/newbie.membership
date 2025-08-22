@@ -1,7 +1,8 @@
-import {IsEnum, IsNumber, IsOptional, IsString} from 'class-validator';
 import {ApiProperty} from '@nestjs/swagger';
 import {CommonListRequestDto} from '@framework/common.dto';
 import {BillingCycle, SubscriptionStatus} from '@prisma/client';
+import {IsEnum, IsNumber, IsOptional, IsString} from 'class-validator';
+import {Type} from 'class-transformer';
 
 // Subscription Plan Dtos
 export class ListSubscriptionPlansRequestDto extends CommonListRequestDto {}
@@ -17,6 +18,7 @@ export class CreateSubscriptionPlanRequestDto {
 
   @ApiProperty({type: Number, required: true})
   @IsNumber()
+  @Type(() => Number)
   priceInCents: number;
 }
 
@@ -24,17 +26,23 @@ export class UpdateSubscriptionPlanRequestDto {
   @ApiProperty({type: String, required: false})
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiProperty({type: Number, required: false})
   @IsOptional()
   @IsNumber()
-  priceInCents: number;
+  priceInCents?: number;
+
+  @ApiProperty({type: String, enum: BillingCycle, required: false})
+  @IsOptional()
+  @IsEnum(BillingCycle)
+  billingCycle?: BillingCycle;
 }
 
 export class GetSubscriptionPlanRequestDto {
   @ApiProperty({type: Number, required: true})
   @IsNumber()
+  @Type(() => Number)
   id: number;
 }
 
@@ -44,6 +52,7 @@ export class ListSubscriptionsRequestDto extends CommonListRequestDto {}
 export class CreateSubscriptionRequestDto {
   @ApiProperty({type: Number, required: true})
   @IsNumber()
+  @Type(() => Number)
   planId: number;
 }
 

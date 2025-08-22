@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
@@ -33,10 +34,10 @@ export class SubscriptionController {
 
   @Get()
   @ApiOperation({summary: 'List all subscriptions'})
-  async listSubscriptions(@Body() body: ListSubscriptionsRequestDto) {
+  async listSubscriptions(@Query() query: ListSubscriptionsRequestDto) {
     return await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.Subscription,
-      pagination: {page: body.page, pageSize: body.pageSize},
+      pagination: {page: query.page, pageSize: query.pageSize},
     });
   }
 
