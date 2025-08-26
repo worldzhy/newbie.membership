@@ -34,10 +34,53 @@ export class SubscriptionController {
   @Get()
   @ApiOperation({summary: 'List all subscriptions'})
   async listSubscriptions(@Query() query: ListSubscriptionsRequestDto) {
-    return await this.prisma.findManyInManyPages({
+    const result = await this.prisma.findManyInManyPages({
       model: Prisma.ModelName.Subscription,
       pagination: {page: query.page, pageSize: query.pageSize},
     });
+
+    // Collect membership IDs
+    const membershipIds = result.records.map(
+      subscription => subscription.membershipId
+    );
+    const memberships = await this.prisma.membership.findMany({
+      where: {id: {in: membershipIds}},
+      select: {id: true, userId: true},
+    });
+
+    // Collect user IDs
+    const userIds = memberships.map(membership => membership.userId);
+    const users = await this.prisma.user.findMany({
+      where: {id: {in: userIds}},
+      select: {id: true, name: true, phone: true},
+    });
+
+    // Map membershipId to user name and phone
+    const membershipIdToUserInfo = new Map<
+      string,
+      {name: string; phone: string}
+    >();
+    for (const membership of memberships) {
+      const user = users.find(u => u.id === membership.userId);
+      membershipIdToUserInfo.set(membership.id, {
+        name: user?.name || 'Unknown',
+        phone: user?.phone || 'Unknown',
+      });
+    }
+
+    // Attach user name and phone to each subscription record
+    for (const subscription of result.records) {
+      const userInfo = membershipIdToUserInfo.get(
+        subscription.membershipId
+      ) || {
+        name: 'Unknown',
+        phone: 'Unknown',
+      };
+      (subscription as any).userName = userInfo.name;
+      (subscription as any).userPhone = userInfo.phone;
+    }
+
+    return result;
   }
 
   @Post()
