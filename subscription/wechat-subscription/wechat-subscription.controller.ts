@@ -4,12 +4,12 @@ import {ApiTags, ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
 import {GuardByApiKey} from '@microservices/account/security/passport/api-key/api-key.decorator';
 import {MembershipService} from '@microservices/membership/membership.service';
 import {SubscriptionService} from '@microservices/membership/subscription/subscription.service';
-import {
-  CreateSubscriptionRequestDto,
-  GetSubscriptionRequestDto,
-  UpdateSubscriptionRequestDto,
-} from '../subscription.dto';
 import {SubscriptionStatus} from '@prisma/client';
+import {
+  CreateWechatSubscriptionRequestDto,
+  GetWechatSubscriptionRequestDto,
+  UpdateWechatSubscriptionRequestDto,
+} from './wechat-subscription.dto';
 
 @ApiTags('Membership / Subscription')
 @ApiBearerAuth()
@@ -26,7 +26,7 @@ export class WechatSubscriptionController {
   @ApiOperation({summary: 'Create a new subscription'})
   async createSubscription(
     @Req() req,
-    @Body() body: CreateSubscriptionRequestDto
+    @Body() body: CreateWechatSubscriptionRequestDto
   ) {
     // [step 1] Find or create the membership for the user
     let membership = await this.prisma.membership.findUnique({
@@ -62,8 +62,8 @@ export class WechatSubscriptionController {
   @Patch(':id')
   @ApiOperation({summary: 'Update an existing subscription'})
   async updateSubscription(
-    @Param() params: GetSubscriptionRequestDto,
-    @Body() body: UpdateSubscriptionRequestDto
+    @Param() params: GetWechatSubscriptionRequestDto,
+    @Body() body: UpdateWechatSubscriptionRequestDto
   ) {
     return await this.prisma.subscription.update({
       where: {id: params.id},

@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Prisma} from '@prisma/client';
@@ -43,18 +42,15 @@ export class SubscriptionController {
 
   @Post()
   @ApiOperation({summary: 'Create a new subscription'})
-  async createSubscription(
-    @Req() req,
-    @Body() body: CreateSubscriptionRequestDto
-  ) {
+  async createSubscription(@Body() body: CreateSubscriptionRequestDto) {
     // [step 1] Find or create the membership for the user
     let membership = await this.prisma.membership.findUnique({
-      where: {userId: req.user.id},
+      where: {userId: body.userId},
       select: {id: true},
     });
     if (!membership) {
       membership = await this.membershipService.createMembership({
-        userId: req.user.id,
+        userId: body.userId,
       });
     }
 
