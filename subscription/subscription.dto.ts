@@ -64,11 +64,6 @@ export class UpdateSubscriptionRequestDto {
   @ApiProperty({type: String, enum: SubscriptionStatus, required: true})
   @IsEnum(SubscriptionStatus)
   status: SubscriptionStatus;
-
-  @ApiProperty({type: String, required: false})
-  @IsOptional()
-  @IsString()
-  wechatTransactionId?: string;
 }
 
 export class GetSubscriptionRequestDto {
