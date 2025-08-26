@@ -45,8 +45,14 @@ export class SubscriptionController {
     );
     const memberships = await this.prisma.membership.findMany({
       where: {id: {in: membershipIds}},
-      select: {id: true, userId: true},
+      select: {id: true, cardNumber: true, userId: true},
     });
+
+    // Map membershipId to cardNumber
+    const membershipIdToCardNumber = new Map<string, string | null>();
+    for (const membership of memberships) {
+      membershipIdToCardNumber.set(membership.id, membership.cardNumber);
+    }
 
     // Collect user IDs
     const userIds = memberships.map(membership => membership.userId);
@@ -55,14 +61,15 @@ export class SubscriptionController {
       select: {id: true, name: true, phone: true},
     });
 
-    // Map membershipId to user name and phone
+    // Map membershipId to cardNumber, user name and phone
     const membershipIdToUserInfo = new Map<
       string,
-      {name: string; phone: string}
+      {name: string; phone: string; cardNumber: string | null}
     >();
     for (const membership of memberships) {
       const user = users.find(u => u.id === membership.userId);
       membershipIdToUserInfo.set(membership.id, {
+        cardNumber: membershipIdToCardNumber.get(membership.id) || null,
         name: user?.name || 'Unknown',
         phone: user?.phone || 'Unknown',
       });
@@ -73,9 +80,12 @@ export class SubscriptionController {
       const userInfo = membershipIdToUserInfo.get(
         subscription.membershipId
       ) || {
+        cardNumber: null,
         name: 'Unknown',
         phone: 'Unknown',
       };
+
+      (subscription as any).cardNumber = userInfo.cardNumber;
       (subscription as any).userName = userInfo.name;
       (subscription as any).userPhone = userInfo.phone;
     }
