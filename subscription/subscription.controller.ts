@@ -15,7 +15,6 @@ import {MembershipService} from '../membership.service';
 import {SubscriptionService} from './subscription.service';
 import {
   CreateSubscriptionRequestDto,
-  GetSubscriptionPlanRequestDto,
   GetSubscriptionRequestDto,
   ListSubscriptionsRequestDto,
   UpdateSubscriptionRequestDto,
@@ -128,7 +127,7 @@ export class SubscriptionController {
 
   @Delete(':id')
   @ApiOperation({summary: 'Delete a subscription plan'})
-  async deleteSubscriptionPlan(@Param() params: GetSubscriptionPlanRequestDto) {
-    return await this.prisma.subscriptionPlan.delete({where: {id: params.id}});
+  async deleteSubscriptionPlan(@Param() params: GetSubscriptionRequestDto) {
+    return await this.prisma.subscription.delete({where: {id: params.id}});
   }
 }
