@@ -4,6 +4,10 @@ import {Type} from 'class-transformer';
 import {SubscriptionStatus} from '@prisma/client';
 
 export class CreateWechatSubscriptionRequestDto {
+  @ApiProperty({type: String, required: true})
+  @IsString()
+  wechatOpenId: string;
+
   @ApiProperty({type: Number, required: true})
   @IsNumber()
   @Type(() => Number)

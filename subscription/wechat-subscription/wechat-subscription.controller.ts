@@ -1,5 +1,5 @@
 import {PrismaService} from '@framework/prisma/prisma.service';
-import {Body, Controller, Param, Patch, Post, Req} from '@nestjs/common';
+import {Body, Controller, Param, Patch, Post} from '@nestjs/common';
 import {ApiTags, ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
 import {GuardByApiKey} from '@microservices/account/security/passport/api-key/api-key.decorator';
 import {MembershipService} from '@microservices/membership/membership.service';
@@ -24,18 +24,19 @@ export class WechatSubscriptionController {
   @GuardByApiKey()
   @Post()
   @ApiOperation({summary: 'Create a new subscription'})
-  async createSubscription(
-    @Req() req,
-    @Body() body: CreateWechatSubscriptionRequestDto
-  ) {
+  async createSubscription(@Body() body: CreateWechatSubscriptionRequestDto) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {wechatOpenId: body.wechatOpenId},
+    });
+
     // [step 1] Find or create the membership for the user
     let membership = await this.prisma.membership.findUnique({
-      where: {userId: req.user.id},
+      where: {userId: user.id},
       select: {id: true},
     });
     if (!membership) {
       membership = await this.membershipService.createMembership({
-        userId: req.user.id,
+        userId: user.id,
       });
     }
 
