@@ -30,12 +30,16 @@ export class MembershipController {
   @Get('me')
   @ApiOperation({summary: 'Get membership information for the current user'})
   async getMembership(@Req() req) {
-    const membership = await this.prisma.membership.findUniqueOrThrow({
+    const membership = await this.prisma.membership.findUnique({
       where: {userId: req.user.id},
       select: {id: true},
     });
 
-    return this.membershipService.getMembership(membership.id);
+    if (membership) {
+      return this.membershipService.getMembership(membership.id);
+    } else {
+      return null;
+    }
   }
 
   @Get()
