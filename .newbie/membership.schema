@@ -34,12 +34,12 @@ model MembershipLevel {
 }
 
 model Subscription {
-  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                   String             @id @default(cuid())
   status               SubscriptionStatus @default(PENDING_PAYMENT)
   dateOfStart          DateTime
   dateOfEnd            DateTime
-  paymentAmountInCents Int
   autoRenew            Boolean            @default(false)
+  paymentAmountInCents Int
   wechatTransactionId  String?
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
