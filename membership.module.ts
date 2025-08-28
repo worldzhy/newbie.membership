@@ -5,6 +5,7 @@ import {MembershipService} from './membership.service';
 import {SubscriptionPlanController} from './subscription/subscription-plan.controller';
 import {SubscriptionController} from './subscription/subscription.controller';
 import {SubscriptionService} from './subscription/subscription.service';
+import {WechatSubscriptionController} from './subscription/wechat-subscription/wechat-subscription.controller';
 
 @Global()
 @Module({
@@ -13,6 +14,7 @@ import {SubscriptionService} from './subscription/subscription.service';
     MembershipController,
     SubscriptionPlanController,
     SubscriptionController,
+    WechatSubscriptionController,
   ],
   providers: [MembershipService, SubscriptionService],
   exports: [MembershipService, SubscriptionService],
