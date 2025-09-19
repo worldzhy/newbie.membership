@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {PrismaService} from '@framework/prisma/prisma.service';
-import {Prisma} from '@prisma/client';
+import {Prisma, SubscriptionStatus} from '@prisma/client';
 import {MembershipService} from './membership.service';
 import {
   GetMembershipRequestDto,
@@ -22,24 +22,35 @@ import {
 @ApiBearerAuth()
 @Controller('memberships')
 export class MembershipController {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly membershipService: MembershipService
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   @Get('me')
   @ApiOperation({summary: 'Get membership information for the current user'})
   async getMembership(@Req() req) {
+    // [step 1] Find membership by userId
     const membership = await this.prisma.membership.findUnique({
       where: {userId: req.user.id},
       select: {id: true},
     });
-
-    if (membership) {
-      return this.membershipService.getMembership(membership.id);
-    } else {
+    if (!membership) {
       return null;
     }
+
+    // [step 2] Expire old subscriptions
+    await this.prisma.subscription.updateMany({
+      where: {
+        status: SubscriptionStatus.ACTIVE,
+        dateOfEnd: {lt: new Date()},
+        membershipId: membership.id,
+      },
+      data: {status: SubscriptionStatus.EXPIRED},
+    });
+
+    // [step 3] Get the membership with active subscriptions
+    return await this.prisma.membership.findUniqueOrThrow({
+      where: {id: membership.id},
+      include: {subscriptions: {where: {status: SubscriptionStatus.ACTIVE}}},
+    });
   }
 
   @Get()

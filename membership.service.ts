@@ -1,28 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from '@framework/prisma/prisma.service';
-import {SubscriptionStatus} from '@prisma/client';
 
 @Injectable()
 export class MembershipService {
   constructor(private readonly prisma: PrismaService) {}
-
-  async getMembership(membershipId: string) {
-    // [step 1] Expire old subscriptions
-    await this.prisma.subscription.updateMany({
-      where: {
-        status: SubscriptionStatus.ACTIVE,
-        dateOfEnd: {lt: new Date()},
-        membershipId,
-      },
-      data: {status: SubscriptionStatus.EXPIRED},
-    });
-
-    // [step 2] Get the membership with active subscriptions
-    return await this.prisma.membership.findUniqueOrThrow({
-      where: {id: membershipId},
-      include: {subscriptions: {where: {status: SubscriptionStatus.ACTIVE}}},
-    });
-  }
 
   async createMembership(params: {userId: string}) {
     // [step 1] Generate a unique card number
