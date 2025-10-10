@@ -26,7 +26,7 @@ export class MembershipService {
     const firstLevel = await this.prisma.membershipLevel.findFirst({
       orderBy: {requiredPoints: 'asc'},
     });
-    return this.prisma.membership.create({
+    return await this.prisma.membership.create({
       data: {
         userId: params.userId,
         cardNumber,

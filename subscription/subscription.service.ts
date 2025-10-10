@@ -28,7 +28,7 @@ export class SubscriptionService {
       throw new Error('Unsupported billing cycle');
     }
 
-    return this.prisma.subscription.create({
+    return await this.prisma.subscription.create({
       data: {
         dateOfStart,
         dateOfEnd,
