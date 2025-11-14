@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Prisma} from '@prisma/client';
 import {PrismaService} from '@framework/prisma/prisma.service';
@@ -39,9 +30,7 @@ export class SubscriptionController {
     });
 
     // Collect membership IDs
-    const membershipIds = result.records.map(
-      subscription => subscription.membershipId
-    );
+    const membershipIds = result.records.map(subscription => subscription.membershipId);
     const memberships = await this.prisma.membership.findMany({
       where: {id: {in: membershipIds}},
       select: {id: true, cardNumber: true, userId: true},
@@ -61,10 +50,7 @@ export class SubscriptionController {
     });
 
     // Map membershipId to cardNumber, user name and phone
-    const membershipIdToUserInfo = new Map<
-      string,
-      {name: string; phone: string; cardNumber: string | null}
-    >();
+    const membershipIdToUserInfo = new Map<string, {name: string; phone: string; cardNumber: string | null}>();
     for (const membership of memberships) {
       const user = users.find(u => u.id === membership.userId);
       membershipIdToUserInfo.set(membership.id, {
@@ -76,9 +62,7 @@ export class SubscriptionController {
 
     // Attach user name and phone to each subscription record
     for (const subscription of result.records) {
-      const userInfo = membershipIdToUserInfo.get(
-        subscription.membershipId
-      ) || {
+      const userInfo = membershipIdToUserInfo.get(subscription.membershipId) || {
         cardNumber: null,
         name: 'Unknown',
         phone: 'Unknown',
@@ -115,10 +99,7 @@ export class SubscriptionController {
 
   @Patch(':id')
   @ApiOperation({summary: 'Update an existing subscription'})
-  async updateSubscription(
-    @Param() params: GetSubscriptionRequestDto,
-    @Body() body: UpdateSubscriptionRequestDto
-  ) {
+  async updateSubscription(@Param() params: GetSubscriptionRequestDto, @Body() body: UpdateSubscriptionRequestDto) {
     return await this.prisma.subscription.update({
       where: {id: params.id},
       data: body,

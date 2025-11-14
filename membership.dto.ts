@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import {IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID} from 'class-validator';
 import {ApiProperty} from '@nestjs/swagger';
 import {CommonListRequestDto} from '@framework/common.dto';
 

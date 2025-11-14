@@ -1,22 +1,9 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Query,
-  Req,
-} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Query, Req} from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {PrismaService} from '@framework/prisma/prisma.service';
 import {Prisma, SubscriptionStatus} from '@prisma/client';
 import {MembershipService} from './membership.service';
-import {
-  GetMembershipRequestDto,
-  ListMembershipLevelsRequestDto,
-  UpdateMembershipRequestDto,
-} from './membership.dto';
+import {GetMembershipRequestDto, ListMembershipLevelsRequestDto, UpdateMembershipRequestDto} from './membership.dto';
 
 @ApiTags('Membership')
 @ApiBearerAuth()
@@ -64,10 +51,7 @@ export class MembershipController {
 
   @Patch(':id')
   @ApiOperation({summary: 'Update an existing membership'})
-  async updateMembership(
-    @Param() params: GetMembershipRequestDto,
-    @Body() body: UpdateMembershipRequestDto
-  ) {
+  async updateMembership(@Param() params: GetMembershipRequestDto, @Body() body: UpdateMembershipRequestDto) {
     return await this.prisma.membership.update({
       where: {id: params.id},
       data: body,
