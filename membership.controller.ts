@@ -2,7 +2,6 @@ import {Body, Controller, Delete, Get, Param, Patch, Query, Req} from '@nestjs/c
 import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {PrismaService} from '@framework/prisma/prisma.service';
 import {Prisma, SubscriptionStatus} from '@prisma/client';
-import {MembershipService} from './membership.service';
 import {GetMembershipRequestDto, ListMembershipLevelsRequestDto, UpdateMembershipRequestDto} from './membership.dto';
 
 @ApiTags('Membership')
