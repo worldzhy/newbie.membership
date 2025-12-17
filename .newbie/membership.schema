@@ -69,6 +69,7 @@ enum BillingCycle {
   QUARTERLY
   SEMI_ANNUALLY
   ANNUALLY
+  LIFETIME
 
   @@schema("microservice/membership")
 }

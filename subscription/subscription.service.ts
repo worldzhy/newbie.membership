@@ -24,6 +24,9 @@ export class SubscriptionService {
     } else if (plan.billingCycle === BillingCycle.ANNUALLY) {
       dateOfEnd = new Date(dateOfStart);
       dateOfEnd.setFullYear(dateOfStart.getFullYear() + 1);
+    } else if (plan.billingCycle === BillingCycle.LIFETIME) {
+      dateOfEnd = new Date(dateOfStart);
+      dateOfEnd.setFullYear(dateOfStart.getFullYear() + 20);
     } else {
       throw new Error('Unsupported billing cycle');
     }
