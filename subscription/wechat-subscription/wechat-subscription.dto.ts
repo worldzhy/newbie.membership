@@ -1,7 +1,7 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsEnum, IsNumber, IsOptional, IsString} from 'class-validator';
 import {Type} from 'class-transformer';
-import {SubscriptionStatus} from '@prisma/client';
+import {SubscriptionStatus} from '@generated/prisma/client';
 
 export class CreateWechatSubscriptionRequestDto {
   @ApiProperty({type: String, required: true})

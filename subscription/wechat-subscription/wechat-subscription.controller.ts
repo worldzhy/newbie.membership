@@ -1,10 +1,10 @@
 import {PrismaService} from '@framework/prisma/prisma.service';
 import {Body, Controller, Param, Patch, Post} from '@nestjs/common';
-import {ApiTags, ApiBearerAuth, ApiOperation} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {GuardByApiKey} from '@microservices/account/security/passport/api-key/api-key.decorator';
 import {MembershipService} from '@microservices/membership/membership.service';
 import {SubscriptionService} from '@microservices/membership/subscription/subscription.service';
-import {SubscriptionStatus} from '@prisma/client';
+import {SubscriptionStatus} from '@generated/prisma/client';
 import {
   CreateWechatSubscriptionRequestDto,
   GetWechatSubscriptionRequestDto,

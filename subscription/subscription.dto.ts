@@ -1,6 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {CommonListRequestDto} from '@framework/common.dto';
-import {BillingCycle, SubscriptionStatus} from '@prisma/client';
+import {BillingCycle, SubscriptionStatus} from '@generated/prisma/client';
 import {IsEnum, IsNumber, IsOptional, IsString} from 'class-validator';
 import {Type} from 'class-transformer';
 
